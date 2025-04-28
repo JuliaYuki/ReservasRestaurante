@@ -59,7 +59,7 @@ python app.py
 ```
 
 O servidor estará disponível em:  
-`http://localhost:5000/api`
+`http://127.0.0.1:5000`
 
 ### 5. Execute o frontend
 
