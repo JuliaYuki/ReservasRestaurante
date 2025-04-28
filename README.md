@@ -63,9 +63,7 @@ O servidor estará disponível em:
 
 ### 5. Execute o frontend
 
-Você pode abrir diretamente o arquivo `index.html` no navegador ou usar uma extensão como "Live Server" no VS Code para rodar em `http://127.0.0.1:5500`.
-
-⚠️ **Importante:** O CORS está configurado para aceitar requisições apenas do `http://127.0.0.1:5500`, então é importante abrir o `index.html` a partir dessa origem (ex: Live Server).
+`http://localhost:5000/api`
 
 ---
 
