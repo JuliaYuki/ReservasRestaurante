@@ -375,6 +375,25 @@ nav ul li a:hover {
   color: var(--primary-color);
 }
 
+.cancelar-reserva {
+  background-color: #fff;
+}
+
+.reserva-item {
+  background: #f4f4f4;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.reserva-recente {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  text-align: left;
+}
+
 /* Footer */
 footer {
   background-color: var(--primary-color);

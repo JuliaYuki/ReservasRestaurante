@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from datetime import datetime
 import json
 import os
 
-app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5500"}})
+app = Flask(__name__, static_folder='static', template_folder='templates')
+CORS(app)
 
 # Arquivo para armazenar as reservas
 RESERVAS_FILE = 'reservas.json'
@@ -22,6 +22,11 @@ def carregar_reservas():
 def salvar_reservas(reservas):
     with open(RESERVAS_FILE, 'w') as f:
         json.dump(reservas, f, indent=2)
+        
+        
+@app.route('/api')
+def home_api():
+    return render_template('index.html')     
 
 @app.route('/api/reservas', methods=['GET'])
 def listar_reservas():
@@ -109,7 +114,7 @@ def verificar_disponibilidade():
             "mesas_disponiveis": mesas_disponiveis,
             "mesas_totais": total_mesas
         })
-
+        
     except Exception as e:
         print(f"[ERRO NO BACKEND] {e}")
         return jsonify({"erro": "Erro interno no servidor"}), 500

@@ -5,20 +5,20 @@ const menuData = {
       nome: "Bruschetta de Tomate e Manjericão",
       descricao: "Pão italiano tostado com tomate, manjericão e azeite.",
       preco: "R$ 25,00",
-      imagem: "./img/bruschetta.jpg",
+      imagem: "../static/img/bruschetta.jpg",
     },
     {
       nome: "Carpaccio de Carne",
       descricao:
         "Fatias finas de carne com molho de alcaparras e lascas de parmesão.",
       preco: "R$ 38,00",
-      imagem: "./img/Carpaccio-de-Carne.jpg",
+      imagem: "../static/img/Carpaccio-de-Carne.jpg",
     },
     {
       nome: "Salada Verde",
       descricao: "Mix de folhas com molho de limão e azeite.",
       preco: "R$ 22,00",
-      imagem: "./img/salada-verde.jpg",
+      imagem: "../static/img/salada-verde.jpg",
     },
   ],
   principais: [
@@ -26,21 +26,21 @@ const menuData = {
       nome: "Filé Mignon ao Molho Madeira",
       descricao: "Filé mignon grelhado com molho madeira e batatas rústicas.",
       preco: "R$ 75,00",
-      imagem: "./img/Filé-Mignon-ao-Molho-Madeira.jpg",
+      imagem: "../static/img/Filé-Mignon-ao-Molho-Madeira.jpg",
     },
     {
       nome: "Risoto de Cogumelos",
       descricao:
         "Arroz arbóreo cremoso com mix de cogumelos frescos e parmesão.",
       preco: "R$ 62,00",
-      imagem: "./img/risoto-de-cogumelo.jpg",
+      imagem: "../static/img/risoto-de-cogumelo.jpg",
     },
     {
       nome: "Peixe do Dia",
       descricao:
         "Peixe fresco grelhado com legumes da estação e purê de batata.",
       preco: "R$ 68,00",
-      imagem: "./img/peixe-do-dia.jpg",
+      imagem: "../static/img/peixe-do-dia.jpg",
     },
   ],
   sobremesas: [
@@ -48,20 +48,20 @@ const menuData = {
       nome: "Pudim de Leite",
       descricao: "Pudim cremoso tradicional com calda de caramelo.",
       preco: "R$ 18,00",
-      imagem: "./img/pudim-leite.jpg",
+      imagem: "../static/img/pudim-leite.jpg",
     },
     {
       nome: "Mousse de Chocolate",
       descricao:
         "Mousse aerada de chocolate meio amargo com raspas de chocolate.",
       preco: "R$ 22,00",
-      imagem: "./img/mousse-chocolate.jpg",
+      imagem: "../static/img/mousse-chocolate.jpg",
     },
     {
       nome: "Tiramisù",
       descricao: "Sobremesa italiana tradicional com café, mascarpone e cacau.",
       preco: "R$ 25,00",
-      imagem: "./img/tiramissu.jpg",
+      imagem: "../static/img/tiramissu.jpg",
     },
   ],
   bebidas: [
@@ -69,25 +69,25 @@ const menuData = {
       nome: "Água Mineral",
       descricao: "Com ou sem gás (500ml).",
       preco: "R$ 6,00",
-      imagem: "./img/agua-mineral.jpg",
+      imagem: "../static/img/agua-mineral.jpg",
     },
     {
       nome: "Refrigerante",
       descricao: "Diversos sabores (lata).",
       preco: "R$ 7,00",
-      imagem: "./img/refrigerante.jpg",
+      imagem: "../static/img/refrigerante.jpg",
     },
     {
       nome: "Suco Natural",
       descricao: "Diversos sabores (300ml).",
       preco: "R$ 12,00",
-      imagem: "./img/suco-natural.jpg",
+      imagem: "../static/img/suco-natural.jpg",
     },
     {
       nome: "Taça de Vinho",
       descricao: "Tinto ou branco (150ml).",
       preco: "R$ 22,00",
-      imagem: "./img/vinho.jpg",
+      imagem: "../static/img/vinho.jpg",
     },
   ],
 };
@@ -179,7 +179,8 @@ function carregarMenuCategoria(categoria) {
   });
 }
 
-// Fazer uma reserva
+let reservaRecente = null; // variável temporária em memória
+
 // Fazer uma reserva
 async function fazerReserva(e) {
   e.preventDefault();
@@ -211,15 +212,66 @@ async function fazerReserva(e) {
       throw new Error(data.erro || "Erro ao processar a reserva");
     }
 
+    // Salvar a reserva recém-criada na variável temporária
+    reservaRecente = data.reserva;
+
     // Mostrar mensagem de sucesso
     reservaForm.classList.add("hidden");
     mensagemSucesso.classList.remove("hidden");
+
+    // Exibir o botão para cancelar a reserva recém-criada
+    exibirReservaRecente();
   } catch (error) {
     console.error("Erro:", error);
     erroTexto.textContent = error.message;
     mensagemErro.classList.remove("hidden");
     reservaForm.classList.add("hidden");
   }
+}
+
+// Exibir a reserva recém-criada com botão de cancelar
+function exibirReservaRecente() {
+  const container = document.createElement("div");
+  container.classList.add("reserva-recente");
+
+  container.innerHTML = `
+    <h3>Reserva criada</h3>
+    <p><strong>Nome:</strong> ${reservaRecente.nome}</p>
+    <p><strong>Data:</strong> ${reservaRecente.data}</p>
+    <p><strong>Hora:</strong> ${reservaRecente.hora}</p>
+    <button class="btn btn-secondary" id="cancelar-reserva-btn">
+      Cancelar Reserva
+    </button>
+  `;
+
+  mensagemSucesso.appendChild(container);
+
+  // Evento para cancelar
+  document
+    .getElementById("cancelar-reserva-btn")
+    .addEventListener("click", async () => {
+      if (!confirm("Deseja cancelar sua reserva?")) return;
+
+      try {
+        const response = await fetch(
+          `${API_URL}/reservas/${reservaRecente.id}`,
+          {
+            method: "DELETE",
+          }
+        );
+        const resultado = await response.json();
+
+        if (!response.ok) {
+          throw new Error(resultado.erro || "Erro ao cancelar a reserva");
+        }
+
+        alert("Reserva cancelada com sucesso!");
+        container.remove(); // Remove a reserva recente da tela
+      } catch (error) {
+        console.error("Erro ao cancelar reserva:", error);
+        alert(error.message);
+      }
+    });
 }
 
 // Verificar disponibilidade
@@ -265,7 +317,7 @@ async function verificarDisponibilidade() {
     console.error("Erro ao verificar disponibilidade:", error);
     // Não exibimos erro visual, apenas ocultamos o resultado
     dispResultado.classList.add("hidden");
-    
+
     // Em caso de erro, desabilita por precaução
     if (btnConfirmar) {
       btnConfirmar.disabled = true;
@@ -273,7 +325,6 @@ async function verificarDisponibilidade() {
       btnConfirmar.style.backgroundColor = "gray";
     }
   }
-
 }
 
 // Resetar formulário após sucesso ou erro
