@@ -8,10 +8,10 @@ Este é um sistema web de reservas para restaurantes, que permite que os cliente
 - Frontend:
   - HTML5
   - CSS3
-  - JavaScript Vanilla
+  - JavaScript
 
 - Backend:
-  - Python 3
+  - Python
   - Flask
   - Flask-CORS
 
@@ -79,7 +79,7 @@ O servidor estará disponível em:
 ## 📦 Funcionalidades
 
 - Verificação de disponibilidade de mesas
-- Envio e armazenamento de reservas
+- Envio,armazenamento e cancelamento de reservas
 - Mensagens de sucesso ou erro
 - Interface moderna e responsiva
 
